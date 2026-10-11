@@ -79,9 +79,10 @@ zwischen Bash-Aufrufen nicht erhalten.
   - `c2bf925` Prüfskript `checks/check-firmenkontext.mjs`
   - `e6dea56` Paket angelegt
   - `288896b` Typ `owner` erlaubt
-  - der Commit, der `design/` (Werkzeuge, dieser Auftrag) sichert
-- `DS`, Branch `main`, lokale Commits: `4d1d706`, `754be44` und der Commit mit
-  `checks/check-struktur.mjs`.
+  - `0a798f8` Werkzeuge, dieser Auftrag, Roadmap
+  - ein letzter Commit „haiku-auftrag: Commit-Stand nachgetragen“
+- `DS`, Branch `main`, lokale Commits: `4d1d706`, `754be44`, `c616a59` (Prüfskript
+  `checks/check-struktur.mjs`, Roadmap).
 - Paket `firmenkontext-recherche` (in FK):
   - Status: geplant, nicht gestartet. Die Zeile `Owner-Start: 2026-10-11 "Los gehts"` steht.
   - Ein Arbeitsschritt `leaf-firmenkontext`. OWNS: `quellen/**`, `kontext/**`, `FIRMENKONTEXT.md`,
