@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const RECHERCHE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'recherche');
 const ZIEL = path.join(RECHERCHE, 'kapitel');
 const KAPITEL = ['identitaet', 'vision', 'mission', 'werte', 'projekte-angebot', 'zielgruppen',
-  'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'sonstiges'];
+  'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'themenfelder', 'anknuepfungspunkte', 'sonstiges'];
 
 const files = fs.existsSync(RECHERCHE) ? fs.readdirSync(RECHERCHE).filter((f) => /^befunde-.*\.json$/.test(f)).sort() : [];
 if (files.length === 0) { console.log(`keine befunde-*.json unter ${RECHERCHE}`); process.exit(1); }
@@ -20,12 +20,19 @@ const proKapitel = Object.fromEntries(KAPITEL.map((k) => [k, []]));
 const widersprueche = [];
 const konsumenten = [];
 const daten = files.map((f) => ({ agent: f.replace(/^befunde-|\.json$/g, ''), data: JSON.parse(fs.readFileSync(path.join(RECHERCHE, f), 'utf8')) }));
-for (const { agent, data } of daten) for (const q of data.quellen || []) quellen[q.slug] = { ...q, agent };
+// Dieselbe Quelle kann in mehreren Dateien stehen (Recherche und Nachlauf); Felder werden zusammengefuehrt,
+// ein vorhandener wee_bezug geht nie verloren.
+for (const { agent, data } of daten) for (const q of data.quellen || []) {
+  const prev = quellen[q.slug] || {};
+  quellen[q.slug] = { ...prev, ...q, agent: prev.agent || agent, wee_bezug: q.wee_bezug || prev.wee_bezug,
+    relevanz_begruendung: q.relevanz_begruendung || prev.relevanz_begruendung,
+    auszugsdatei: q.auszugsdatei && q.auszugsdatei !== '-' ? q.auszugsdatei : prev.auszugsdatei || q.auszugsdatei };
+}
 for (const { agent, data } of daten) {
   for (const b of data.befunde || []) {
     const q = quellen[b.quelle_slug] || {};
     (proKapitel[b.kapitel] || proKapitel.sonstiges).push({
-      ...b, agent, typ: q.typ, abhaengig_von: q.abhaengig_von || '', stand_der_quelle: q.stand_der_quelle || '',
+      ...b, agent, typ: q.typ, wee_bezug: q.wee_bezug || '', abhaengig_von: q.abhaengig_von || '', stand_der_quelle: q.stand_der_quelle || '',
       auszugsdatei: q.auszugsdatei,
     });
   }

@@ -9,9 +9,10 @@ import { fileURLToPath } from 'node:url';
 
 const RECHERCHE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'recherche');
 const KAPITEL = ['identitaet', 'vision', 'mission', 'werte', 'projekte-angebot', 'zielgruppen',
-  'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'sonstiges'];
+  'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'themenfelder', 'anknuepfungspunkte', 'sonstiges'];
 const TYPEN = ['website', 'linkedin', 'instagram', 'drive', 'github-org', 'eigenes-projekt'];
 const RELEVANZ = ['hoch', 'mittel', 'gering', 'keine'];
+const BEZUG = ['kern', 'unterstuetzend', 'randstaendig', 'kein'];
 
 function norm(s) {
   return String(s).normalize('NFC').replace(/[“”„«»]/g, '"')
@@ -28,14 +29,19 @@ function checkFile(file) {
   }
   if (errors.length) return { errors, count: {} };
   const quellen = new Map();
+  const bezug = new Map();
   for (const [i, q] of data.quellen.entries()) {
     const at = `${rel} quellen[${i}]`;
+    // wee_bezug und relevanz_begruendung sind optional (Laeufe vor dem 11.10.2026, 17:50 kennen sie nicht); wenn vorhanden, werden sie geprueft.
     for (const f of ['slug', 'typ', 'fundstelle', 'titel', 'auszugsdatei', 'relevanz']) {
       if (!q[f] || typeof q[f] !== 'string') errors.push(`${at}: Feld ${f} fehlt`);
     }
     if (q.typ && !TYPEN.includes(q.typ)) errors.push(`${at}: unbekannter typ "${q.typ}"`);
     if (q.relevanz && !RELEVANZ.includes(q.relevanz)) errors.push(`${at}: unbekannte relevanz "${q.relevanz}"`);
+    if (q.wee_bezug !== undefined && !q.relevanz_begruendung) errors.push(`${at}: wee_bezug ohne relevanz_begruendung`);
+    if (q.wee_bezug && !BEZUG.includes(q.wee_bezug)) errors.push(`${at}: unbekannter wee_bezug "${q.wee_bezug}" (erlaubt: ${BEZUG.join(', ')})`);
     if (quellen.has(q.slug)) errors.push(`${at}: slug "${q.slug}" doppelt`);
+    bezug.set(q.slug, q.wee_bezug);
     let text = null;
     if (q.auszugsdatei && q.auszugsdatei !== '-') {
       const p = path.join(RECHERCHE, ...q.auszugsdatei.replace(/^.*design\/recherche\//, '').split('/'));
@@ -55,6 +61,9 @@ function checkFile(file) {
     if (b.kapitel && !KAPITEL.includes(b.kapitel)) errors.push(`${at}: unbekanntes kapitel "${b.kapitel}"`);
     if (b.art && !['explizit', 'beobachtet'].includes(b.art)) errors.push(`${at}: art muss explizit oder beobachtet sein`);
     if (!quellen.has(b.quelle_slug)) { errors.push(`${at}: quelle_slug "${b.quelle_slug}" steht nicht in quellen`); continue; }
+    if (bezug.get(b.quelle_slug) === 'kein') errors.push(`${at}: Quelle "${b.quelle_slug}" hat wee_bezug kein und darf keine Befunde tragen`);
+    if (bezug.get(b.quelle_slug) === 'randstaendig' && !String(b.aussage).startsWith('Randquelle: ')) errors.push(`${at}: Befund aus randstaendiger Quelle muss mit "Randquelle: " beginnen`);
+    if (b.kapitel === 'anknuepfungspunkte' && b.art === 'beobachtet' && !String(b.aussage).replace(/^Randquelle: /, '').startsWith('Moegliche Richtung: ')) errors.push(`${at}: beobachteter Anknuepfungspunkt muss mit "Moegliche Richtung: " beginnen`);
     const text = quellen.get(b.quelle_slug);
     if (text === null) { errors.push(`${at}: Quelle "${b.quelle_slug}" hat keine Auszugsdatei, Zitat nicht pruefbar`); continue; }
     // Auslassungen (… oder ...) teilen ein Zitat; jeder Teil ab 8 Zeichen muss im Auszug stehen.

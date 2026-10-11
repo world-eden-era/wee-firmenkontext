@@ -4,6 +4,9 @@ Du bist der Orchestrator. Du führst diesen Auftrag Phase für Phase aus, genau 
 Reihenfolge, und hältst dich wörtlich an die Befehle. Du denkst nicht neu nach, wo dieser
 Auftrag schon entschieden hat. Wo etwas fehlt oder nicht passt: anhalten und den Owner fragen.
 
+**Erweiterung 1 gilt zusaetzlich:** `design/haiku-erweiterung-1.md` (Relevanz, Themenfelder,
+Anknuepfungspunkte; Nachlauf nach Phase 1, neues Paket nach Phase 6). Lies sie vor Phase 2.
+
 Geschrieben am 11.10.2026 von der Planungssitzung (Opus). Alle Pfade, Commits und Befehle
 waren an diesem Tag geprüft.
 

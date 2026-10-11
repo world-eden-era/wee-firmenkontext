@@ -1,0 +1,4 @@
+[Owner, 11.10.2026, ca. 17:45, Erweiterung zum Auftrag firmenkontext-recherche]
+Kannst du mir bitte noch einen kleinen Erweiterungsprompt schreiben, weil er aktuell ja auch die Website von Leon und alle so Nebenprojekte, die da irgendwie er findet, alle mit auswertet. Er soll auf jeden Fall natürlich ganz explizit gucken, welche Sachen relevant wirklich für World Eden Error und den Firmenkontext sind. Und dann gehört natürlich auch noch viel mehr da rein, und zwar so thematischer Kontext, und in welche Richtungen dieser Kontext Türen offen lässt.
+
+[Bezug] Originalauftrag vom 11.10.2026: docs/packages/firmenkontext-recherche/OWNER.md im Repo world-eden-era/wee-firmenkontext.

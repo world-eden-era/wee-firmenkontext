@@ -11,7 +11,7 @@ export const meta = {
 
 const R = '/Users/benknaute/Claude/Projects/Keel-Harness/user-projects/wee-firmenkontext/docs/packages/firmenkontext-recherche/design/recherche'
 const MODEL = (args && args.modell) || 'haiku'
-const KAPITEL = ['identitaet', 'vision', 'mission', 'werte', 'projekte-angebot', 'zielgruppen', 'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'sonstiges']
+const KAPITEL = ['identitaet', 'vision', 'mission', 'werte', 'projekte-angebot', 'zielgruppen', 'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'themenfelder', 'anknuepfungspunkte', 'sonstiges']
 const SCHEMA = {
   type: 'object',
   properties: {
@@ -36,7 +36,7 @@ Aussagen aus genau einer unabhaengigen, offiziellen WEE-Quelle (Website, Kanaele
 | Nr | Aussage | Quellen | Unabhaengig | Zitat |
 
 ## Arbeitsstand
-Aussagen nur aus Meeting-Notizen, Vorgaenger-Repo, alter Seite, Entwuerfen oder Code-Kommentaren. Kommen NICHT als Tatsache in den Firmenkontext.
+Aussagen nur aus Meeting-Notizen, Vorgaenger-Repo, alter Seite, Entwuerfen, Code-Kommentaren oder randstaendigen Quellen (wee_bezug randstaendig, Aussage beginnt mit "Randquelle: ") ohne Bestaetigung durch eine kern- oder unterstuetzend-Quelle. Kommen NICHT als Tatsache in den Firmenkontext.
 | Nr | Aussage | Quellen | Unabhaengig | Zitat |
 
 ## Offen
@@ -48,6 +48,8 @@ Vom Pruefer gestrichene Aussagen mit Grund.
 | Nr | Aussage | Grund |
 
 Spalten: Nr = <Kapitelkuerzel>-<laufende Zahl> (z. B. VIS-3); Quellen = slugs, mit Komma getrennt; Unabhaengig = Anzahl unabhaengiger Quellen (Zahl); Zitat = kurzes woertliches Zitat aus dem Befund (hoechstens 160 Zeichen, Auslassung mit "…").
+Relevanz: Befunde aus Quellen mit wee_bezug "kein" (siehe _quellen.json) kommen nach Entfernt mit Grund "kein WEE-Bezug". Befunde aus Quellen mit wee_bezug "randstaendig" kommen nach Arbeitsstand, ausser eine kern- oder unterstuetzend-Quelle sagt dasselbe.
+Kapitel anknuepfungspunkte: jede Zeile nennt in der Aussage die Art der Richtung (Content-Thema, Format, Kooperation, Projekt, Zielgruppe, Foerderung, Region) und worauf sie aufbaut; abgeleitete Zeilen behalten "Moegliche Richtung: " am Anfang. Kapitel themenfelder: je Thema eine Zeile, wie WEE es behandelt.
 Unabhaengigkeit: Quellen sind ABHAENGIG und zaehlen zusammen als EINE, wenn eine aus der anderen stammt: Live-Website und Repo BenWEE-cell/world-eden-era bzw. benni-cmd/WEE-Website-V2; inhaltsgleiche LinkedIn- und Instagram-Beitraege; Versionen oder Teile (-t1, -t2) desselben Dokuments; Feld abhaengig_von beachten.
 `
 

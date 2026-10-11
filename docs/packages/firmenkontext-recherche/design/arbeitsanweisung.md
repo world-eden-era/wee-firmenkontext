@@ -58,4 +58,11 @@ Vorrang: Owner-Entscheidung vor Abschnitt „Gesichert" vor „Eine Quelle". Zei
    Call-to-Actions und je Kanal Beispiele, alles belegt. Glossar: Begriff, Schreibweise,
    Bedeutung, Quelle. Deutsch als Hauptsprache; englische Fassungen nur, wo WEE sie selbst nutzt
    (z. B. Slogan).
-7. Nicht committen; `checks/` nicht aendern.
+7. Relevanz fuer WEE: Schreibe zusaetzlich `quellen/RELEVANZ.md` mit je Registereintrag einer Zeile
+   `| Qnnn | wee_bezug | Begruendung |` (wee_bezug: kern, unterstuetzend, randstaendig, kein; Werte aus
+   `design/recherche/kapitel/_quellen.json`, Owner-Korrekturen aus `design/owner-entscheidungen.md` haben Vorrang;
+   Owner-Entscheidungen sind kern). Quellen mit wee_bezug kein werden nicht zitiert. Eine Aussage, die sich nur auf
+   randstaendige Quellen stuetzt, kommt nicht in den Kontext.
+8. Die Kapitel `kontext/11-themenfelder.md` und `kontext/12-anknuepfungspunkte.md` schreibt das Folgepaket
+   `firmenkontext-themen`, nicht dieser Schritt.
+9. Nicht committen; `checks/` nicht aendern.

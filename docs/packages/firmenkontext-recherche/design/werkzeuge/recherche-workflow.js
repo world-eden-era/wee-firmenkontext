@@ -17,7 +17,7 @@ const CORPUS = H + '/.recherche-cache/drive/text'
 const DATE = '2026-10-11'
 const MODEL = (args && args.modell) || 'haiku'
 const ONLY = (args && Array.isArray(args.nur)) ? args.nur : null
-const KAPITEL = ['identitaet', 'vision', 'mission', 'werte', 'projekte-angebot', 'zielgruppen', 'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'sonstiges']
+const KAPITEL = ['identitaet', 'vision', 'mission', 'werte', 'projekte-angebot', 'zielgruppen', 'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'themenfelder', 'anknuepfungspunkte', 'sonstiges']
 
 const SCHEMA = {
   type: 'object',
@@ -33,7 +33,7 @@ const SCHEMA = {
 }
 
 const BEISPIEL = JSON.stringify({
-  quellen: [{ slug: 'website-home', typ: 'website', fundstelle: 'https://www.world-eden-era.org/', titel: 'Startseite', stand_der_quelle: '2026-10-09', auszugsdatei: 'auszuege/website-home.md', abhaengig_von: 'Inhalt stammt aus Repo BenWEE-cell/world-eden-era content/home.json', relevanz: 'hoch' }],
+  quellen: [{ slug: 'website-home', typ: 'website', fundstelle: 'https://www.world-eden-era.org/', titel: 'Startseite', stand_der_quelle: '2026-10-09', auszugsdatei: 'auszuege/website-home.md', abhaengig_von: 'Inhalt stammt aus Repo BenWEE-cell/world-eden-era content/home.json', relevanz: 'hoch', wee_bezug: 'kern', relevanz_begruendung: 'Offizielle Startseite von WEE.' }],
   befunde: [{ kapitel: 'vision', aussage: 'WEE nennt als Leitsatz We Need. We Can. We Will.', art: 'explizit', zitat: 'We Need. We Can. We Will.', fundstelle: 'https://www.world-eden-era.org/ Abschnitt Hero', quelle_slug: 'website-home' }],
   widersprueche: [{ thema: 'Schreibweise Projektname', beschreibung: 'Project Oasis und Projekt Oasis kommen beide vor', fundstellen: 'website-home Abschnitt 2; linkedin-post-1' }],
   luecken: ['Keine Quelle nennt das Gruendungsdatum.'],
@@ -55,7 +55,16 @@ KAPITEL (Feld kapitel, genau einer dieser Werte): ${KAPITEL.join(', ')}.
 - visuelle-identitaet: Farben mit exakten Werten, Schriften, Logo, Bildsprache, Gestaltungsregeln
 - kanaele-formate: Website, LinkedIn, Instagram, weitere Kanaele, Formate, Reihen, Rhythmus
 - glossar: Fachbegriffe und Eigennamen mit Schreibweise und Bedeutung
+- themenfelder: fachliche Themen, in denen WEE arbeitet und kommuniziert (z. B. Aquaponik, Permakultur, Bodengesundheit, Ernaehrungssicherheit, nur was belegt ist), jeweils WIE WEE das Thema behandelt (Haltung, Tiefe, wiederkehrende Argumente, zitierte Studien)
+- anknuepfungspunkte: Richtungen, die der Kontext offen laesst: Themen, Formate, Kooperationen, Projekte, Zielgruppen, Foerderwege, Regionen, die eine Quelle als Plan, Idee, Wunsch, naechsten Schritt oder Partner nennt. Nennt die Quelle es selbst so: art explizit. Zeigt es sich nur aus wiederkehrenden Themen: art beobachtet, und die Aussage beginnt mit "Moegliche Richtung: ". Nie frei erfinden.
 - sonstiges: Finanzierung, Partner, Foerderung, Organisation, alles andere
+
+RELEVANZ FUER WEE (Pflicht je Quelle, Feld wee_bezug plus ein Satz in relevanz_begruendung):
+- kern: von WEE als Organisation oder ueber WEE, offizielle Aussage (Website, Kanaele, Businessplan, Satzung, Konzeptdokumente, Design-System).
+- unterstuetzend: WEE-Projektmaterial, das Inhalte zeigt (Simulator, Spiel, CRM-Konzept, Social-Media-Strategie).
+- randstaendig: Experimente, Spielwiesen, Prototypen, verworfene Entwuerfe, Nebenprojekte einzelner Personen (z. B. Website-Labor, alte Seite, Vorgaenger-Repo). Befunde daraus beginnen mit "Randquelle: " und gelten nur, wenn eine kern- oder unterstuetzend-Quelle dasselbe sagt.
+- kein: kein Bezug zu WEE (z. B. private Portfolios, Werkzeug-Repos). Dann keine Befunde, nur in quellen mit Begruendung.
+Pruefe Bezug streng: Dass etwas im Drive, in der GitHub-Orga oder einem Projektordner liegt, macht es noch nicht zur WEE-Position.
 
 ARBEITSSCHRITTE (genau in dieser Reihenfolge):
 1. Lies deine Quellen VOLLSTAENDIG. Lange Dateien liest du abschnittsweise mit dem Read-Werkzeug (offset/limit), bis zum Ende.
@@ -64,6 +73,7 @@ ARBEITSSCHRITTE (genau in dieser Reihenfolge):
 ${BEISPIEL}
    - quellen: JEDE gelesene Quelle, auch irrelevante (dann relevanz gering oder keine und auszugsdatei "-").
    - typ ist genau einer von: website, linkedin, instagram, drive, github-org, eigenes-projekt.
+   - wee_bezug ist genau einer von: kern, unterstuetzend, randstaendig, kein; relevanz_begruendung ist ein Satz.
    - auszugsdatei steht relativ zu ${OUT}, also "auszuege/<slug>.md".
    - befunde: eine Aussage je Befund. zitat ist eine WOERTLICHE Kopie aus deiner Auszugsdatei (mindestens 8 Zeichen; Auslassungen nur mit "…"). Die Aussage behauptet nichts, was das Zitat nicht hergibt.
    - art: "explizit", wenn WEE es selbst sagt; "beobachtet", wenn es ein sichtbares Muster ist (Tonfall, Emojis, Farbwerte aus CSS); dann zeigt das Zitat ein Beispiel.
