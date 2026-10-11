@@ -1,0 +1,47 @@
+# Zahlenpruefschleife (docs/PRUEFSCHLEIFE-ZAHLEN.md): monatlich, auf Knopfdruck und bei jeder Aenderung an Inhalten.
+# Findet sie faellige oder neue Zahlen, legt sie ein Issue an. Sie aendert nichts am Repo.
+name: Zahlenpruefung
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+  push:
+    paths: ['zahlen/**', 'kontext/**', 'sprache/**', 'FIRMENKONTEXT.md']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Register und Abdeckung
+        if: hashFiles('zahlen/zahlen.json') != ''
+        run: node checks/check-folge.mjs zahlen-register && node checks/check-folge.mjs zahlen-abdeckung
+      - name: Faellige Pruefungen
+        id: faellig
+        if: hashFiles('zahlen/zahlen.json') != ''
+        continue-on-error: true
+        run: node checks/check-folge.mjs zahlen-faellig | tee faellig.txt
+      - name: Neue Zahlen auf Website und LinkedIn
+        id: scan
+        if: hashFiles('zahlen/zahlen.json') != ''
+        continue-on-error: true
+        run: node checks/zahlen-scan.mjs | tee scan.txt
+      - name: Issue anlegen
+        if: steps.faellig.outcome == 'failure' || steps.scan.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "Die Zahlenpruefschleife hat Arbeit gefunden. Ablauf: docs/PRUEFSCHLEIFE-ZAHLEN.md"
+            echo; echo "## Faellig"; echo '```'; cat faellig.txt 2>/dev/null || true; echo '```'
+            echo; echo "## Neue Zahlen"; echo '```'; cat scan.txt 2>/dev/null || true; echo '```'
+          } > body.md
+          gh issue create --title "Zahlenpruefung $(date +%Y-%m-%d)" --body-file body.md

@@ -6,6 +6,8 @@ Auftrag schon entschieden hat. Wo etwas fehlt oder nicht passt: anhalten und den
 
 **Erweiterung 1 gilt zusaetzlich:** `design/haiku-erweiterung-1.md` (Relevanz, Themenfelder,
 Anknuepfungspunkte; Nachlauf nach Phase 1, neues Paket nach Phase 6). Lies sie vor Phase 2.
+**Erweiterung 2 gilt zusaetzlich:** `design/haiku-erweiterung-2.md` (Zahlen absichern mit fester
+Pruefschleife, Markensprache, Fachsprache, Fragenkatalog). Lies sie vor Phase 4.
 
 Geschrieben am 11.10.2026 von der Planungssitzung (Opus). Alle Pfade, Commits und Befehle
 waren an diesem Tag geprüft.
