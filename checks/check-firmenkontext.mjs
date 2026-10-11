@@ -8,7 +8,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const REGISTER = path.join(root, 'quellen', 'REGISTER.md');
+// Pflichttypen: jede Quellenart des Owner-Auftrags kommt mindestens einmal vor.
 const TYPES = ['website', 'linkedin', 'instagram', 'drive', 'github-org', 'eigenes-projekt'];
+// owner: Entscheidung oder Aussage des Owners im Chat (Datum und Wortlaut im Auszug); optional.
+const ALL_TYPES = [...TYPES, 'owner'];
 const CHAPTERS = [
   '01-identitaet.md', '02-vision.md', '03-mission.md', '04-werte.md', '05-projekte-angebot.md',
   '06-zielgruppen.md', '07-markensprache.md', '08-visuelle-identitaet.md', '09-kanaele-formate.md',
@@ -31,7 +34,7 @@ function parseRegister() {
     if (!/^Q\d{3}$/.test(cells[1] || '')) continue;
     const [, id, type, location, date, extract] = cells;
     if (entries.some((e) => e.id === id)) errors.push(`${id}: doppelt im Register`);
-    if (!TYPES.includes(type)) errors.push(`${id}: unbekannter Typ "${type}"`);
+    if (!ALL_TYPES.includes(type)) errors.push(`${id}: unbekannter Typ "${type}"`);
     if (!location) errors.push(`${id}: Fundstelle fehlt`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) errors.push(`${id}: Abrufdatum fehlt oder nicht YYYY-MM-DD`);
     const extractPath = path.join(root, ...(extract || '').split('/'));
