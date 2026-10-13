@@ -10,7 +10,10 @@ export const meta = {
 }
 
 const R = '/Users/benknaute/Claude/Projects/Keel-Harness/user-projects/wee-firmenkontext/docs/packages/firmenkontext-recherche/design/recherche'
-const MODEL = (args && args.modell) || 'haiku'
+const MODEL = (args && args.modell) || 'sonnet' // Gegenpruefer
+const MODEL_SCHREIBER = (args && args.modell_schreiber) || 'haiku'
+// Diese Schreiber-Ergebnisse liegen im Journal von wf_cec5ce93-6b8. Ihr Modell bleibt sonnet, damit der Cache greift.
+const SCHREIBER_FERTIG = ['identitaet', 'vision', 'mission', 'werte', 'zielgruppen']
 const KAPITEL = ['identitaet', 'vision', 'mission', 'werte', 'projekte-angebot', 'zielgruppen', 'markensprache', 'visuelle-identitaet', 'kanaele-formate', 'glossar', 'themenfelder', 'anknuepfungspunkte', 'sonstiges']
 const SCHEMA = {
   type: 'object',
@@ -65,7 +68,7 @@ Arbeitsschritte:
 5. Schreibe die Datei ${R}/faktenbasis/${k}.md (Ordner anlegen, falls noetig).
 Regeln: Nur was in den Befunden steht, nichts aus eigenem Wissen, keine Glaettung. Personenbezogen nur offizielle Namen und Rollen. Keine Aussagen ueber Ordner der alten Drive-Ablage.
 ${FORMAT}
-Gib die Zaehlung je Abschnitt zurueck (entfernt = 0).`, { label: `faktenbasis:${k}`, phase: 'Faktenbasis', schema: SCHEMA, model: MODEL }),
+Gib die Zaehlung je Abschnitt zurueck (entfernt = 0).`, { label: `faktenbasis:${k}`, phase: 'Faktenbasis', schema: SCHEMA, model: SCHREIBER_FERTIG.includes(k) ? 'sonnet' : MODEL_SCHREIBER }),
   (r, k) => agent(`Du bist Gegenpruefer fuer ${R}/faktenbasis/${k}.md. Deine Aufgabe ist, jede Aussage zu WIDERLEGEN; im Zweifel gilt sie als nicht belegt.
 Fuer jede Zeile in Gesichert, Eine Quelle und Arbeitsstand:
 1. Suche die genannten Quellen-slugs in ${R}/kapitel/${k}.json bzw. ${R}/kapitel/_quellen.json und lies das Zitat und, wenn noetig, die Auszugsdatei unter ${R}/<auszugsdatei>.
@@ -89,6 +92,6 @@ Je Frage ein Block:
 - Optionen: <a) …, b) …, c) …> (nur Optionen, die die Quellen zeigen; zusaetzlich immer "anders: Owner nennt Wortlaut")
 - Quellen: <slugs und Fundstellen>
 - Betrifft: <Kapitel und Nr der Zeilen>
-Sortiere nach Wirkung: zuerst Identitaet, Vision, Mission, Werte, dann Markensprache, dann der Rest. Gib die Anzahl Fragen zurueck.`, { label: 'fragen', phase: 'Fragen', model: MODEL })
+Sortiere nach Wirkung: zuerst Identitaet, Vision, Mission, Werte, dann Markensprache, dann der Rest. Gib die Anzahl Fragen zurueck.`, { label: 'fragen', phase: 'Fragen', model: 'haiku' })
 
 return { kapitel: ok, fehlt, fragen }
